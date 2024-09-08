@@ -70,8 +70,8 @@ class ProSafeExporter:
             for retriever in self.retrievers:
                 result += retriever.result + '\n\n'
             LOG.debug('Request on endpoint /%s \n%s', path, result)
-            return flask.Response(result, status=200, headers={})
-        return flask.Response('', status=503, headers={'Retry-After': self.retrieveInterval})
+            return flask.Response(result, status=200, headers={'content-type':'text/plain'})
+        return flask.Response('', status=503, headers={'Retry-After': self.retrieveInterval, 'content-type':'text/plain'})
 
     def __retrieve(self):
         LOG.info('Retrieving data from all devies')
