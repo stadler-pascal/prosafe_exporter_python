@@ -69,9 +69,15 @@ class ProSafeExporter:
             result = "# Exporter output\n\n"
             for retriever in self.retrievers:
                 result += retriever.result + '\n\n'
-            LOG.debug('Request on endpoint /%s \n%s', path, result)
-            return flask.Response(result, status=200, headers={'content-type':'text/plain'})
-        return flask.Response('', status=503, headers={'Retry-After': self.retrieveInterval, 'content-type':'text/plain'})
+            unified_result = ""
+            lines_seen = set()
+            for line in result.split('\n'):
+                if line not in lines_seen or (not line.strip()): # not a duplicate
+                    unified_result += line + '\n'
+                    lines_seen.add(line)
+            LOG.debug('Request on endpoint /%s \n%s', path, unified_result)
+            return flask.Response(unified_result, status=200, headers={'Content-Type':'text/plain; version=0.0.4; charset=utf-8'})
+        return flask.Response('', status=503, headers={'Retry-After': self.retrieveInterval, 'Content-Type':'text/plain; version=0.0.4; charset=utf-8'})
 
     def __retrieve(self):
         LOG.info('Retrieving data from all devies')
