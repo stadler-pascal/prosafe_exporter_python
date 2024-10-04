@@ -443,7 +443,7 @@ class ProSafeRetrieve:
                 self.__status = None
                 self.__statistics = None
                 self.error = f'Connection Error with host {self.hostname}'
-                LOG.error(self.error)
+                LOG.info(self.error)
 
     def writeResult(self):  # noqa: C901
         result = ""
